@@ -8,8 +8,9 @@ def showImg(img, position = 111, show = False) : #顯示灰階圖片
     plt.imshow(img,cmap='gray')  #將灰階圖送入buffer
     if show : plt.show() #是否直接顯示
 
-def addNoisy(img) :
-    STD = 2 #標準高斯分佈之標準差, 在STD以外呈現雜訊, 否則為原圖
+
+def addNoisy(img, STD = 1) : #將圖片加上胡椒噪音, 並回傳新圖
+    #標準高斯分佈之標準差, 在STD以外呈現雜訊, 否則為原圖
     h,w = img.shape[:2]
     
     #雜訊判斷對應像素, 判斷方式如上
@@ -30,6 +31,12 @@ img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # 轉換成灰階影像
 print("Original")
 showImg(img,111,show = True)
 
-#加噪音
-print("Add noise")
-showImg(addNoisy(img),111,show = True)
+#加噪音 STD = 1
+print("Add Noise STD = 1")
+showImg(addNoisy(img, STD=1),111,show = True)
+#加噪音 STD = 2
+print("Add Noise STD = 2")
+showImg(addNoisy(img, STD=2),111,show = True)
+#加噪音 STD = 3
+print("Add Noise STD = 3")
+showImg(addNoisy(img, STD=3),111,show = True)
