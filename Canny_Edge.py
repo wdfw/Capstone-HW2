@@ -113,7 +113,7 @@ def Threadhold(G,lower,upper) : #臨界值判定
                         break
 
                 
-def Canny(img, TL, TH) : #Canny Edge Detection
+def MyCanny(img, TL, TH) : #Canny Edge Detection
     if len(img.shape) >= 3 : #如果輸入彩色影像 轉灰階
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # 轉換成灰階影像
         
@@ -145,7 +145,7 @@ if __name__ == "__main__" :
     TL,TH = 30,60 #高低閥值設定
     #-----------------------------------------------------
     
-    G = Canny(img,TL,TH) #手刻 Canny(image, Threadhold_low, Threadhold_high)
+    G = MyCanny(img,TL,TH) #手刻 Canny(image, Threadhold_low, Threadhold_high)
     cvG = cv2.Canny(MyNoiseRemoval(img,5).astype(np.uint8), TL, TH) #輸入濾波後的圖給CV2 Canny
     
     #原圖部分
