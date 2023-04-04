@@ -23,8 +23,6 @@ def normalKernel(k, ro) : #回傳高斯核 ro代表高斯核的標準差
     return kernel/np.sum(kernel) #回傳歸一化後的高斯核
 
 #角度常數
-#TAN22_5 = math.pi / 8
-#TAN67_5 = math.pi / 8 * 3
 TAN22_5 = 0.414
 TAN67_5 = 2.414
 def angel(p) : #將梯度轉換為方向 分為 0垂直 1斜下 2平行 3斜上
@@ -45,9 +43,6 @@ def sobel(img,dx,dy) :#sobel運算子 dx==1使用平行核 dy==1使用垂直核
         for j in range(w-2) : 
             #透過圖與核的相乘並相加得到結果
             res = np.sum(np.multiply(kernel,img[i:i+3,j:j+3])) 
-            #將結果限制於0-255
-            #res = max(0,res)
-            #res = min(255,res)
             G[i+1,j+1] = res
     return G
 
@@ -92,9 +87,9 @@ def NonMaximum(G,D) : #與鄰居比對判斷是否最大值
     for i in range(1,len(D)-1) : 
         for j in range(1,len(D[i])-1) :
             if D[i,j] == 0 : v1,v2 = G[i-1,j],G[i+1,j] #當方向垂直 找垂直鄰點
-            elif D[i,j] == 3 : v1,v2 = G[i+1,j+1],G[i-1,j-1] #當方向斜下 找斜下鄰點
+            elif D[i,j] == 3 : v1,v2 = G[i+1,j+1],G[i-1,j-1] #當方向斜上 找斜上鄰點
             elif D[i,j] == 2 : v1,v2 = G[i,j+1],G[i,j-1] #當方向平行 找平行鄰點
-            elif D[i,j] == 1 : v1,v2 = G[i-1,j+1],G[i+1,j-1] #當方向斜上 找斜上鄰點
+            elif D[i,j] == 1 : v1,v2 = G[i-1,j+1],G[i+1,j-1] #當方向斜下 找斜下鄰點
             if(not G[i,j] <= v1 and not G[i,j] <= v2) : newImg[i,j] = G[i,j] #如果是極大點 就給此像素值
     return newImg
             
@@ -125,9 +120,8 @@ def MyCanny(img, TL, TH) : #Canny Edge Detection
    
     G = ((Gx**2 + Gy**2)**0.5).astype(np.uint8)
     
-    D = Gy/(Gx+10e-6)#np.arctan(Gy/(Gx+10e-6)) #設定10e-6防止除0
-    
-    #將數值轉為角度 再轉為方向
+    D = Gy/(Gx+10e-6) #10e-6防止除0
+    #將數值轉為方向
     Direction(D)
     #非極大值抑制
     G = NonMaximum(G ,D) 
